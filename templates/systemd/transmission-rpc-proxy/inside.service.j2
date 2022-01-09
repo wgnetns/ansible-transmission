@@ -1,0 +1,16 @@
+[Unit]
+# If systemd is starting Transmission too, it will wait until Transmission is running before starting this service
+After={{ transmission_daemon_systemd_unit_name }}.service
+Description=Transmission RPC inner proxy
+# If Transmission were not running but systemd-socket-proxyd(8) started anyway, it would fail without giving the user any hint
+Requisite={{ transmission_daemon_systemd_unit_name }}.service
+
+[Service]
+DynamicUser=yes
+ExecStart=/usr/lib/systemd/systemd-socket-proxyd --exit-idle-time=10 localhost:{{ transmission_settings['rpc-port'] }}
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateUsers=yes
+ProtectHome=yes
+ProtectSystem=strict
+SupplementaryGroups=http

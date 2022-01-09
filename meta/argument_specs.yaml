@@ -1,0 +1,32 @@
+---
+
+argument_specs:
+  main:
+    short_description: Wireguard-ed Transmission setup
+    description: |
+      Set up a headless Transmission server isolated in a network namespace of its own, with all BitTorrent traffic routed through a Wireguard interface. This can be used to ensure that BitTorrent traffic stays within a VPN.
+
+      Additionally, if someone breaks into the Transmission server, the network namespace makes it harder for them to (ab)use your real Internet connection.
+    author:
+      - David Joaquín Shourabi Porcel
+    options:
+      hooks_down:
+        description: Commands to execute before deleting the network namespace
+        elements: str
+        required: true
+        type: list
+      hooks_postup:
+        description: Commands to execute to set up the Wireguard interface inside the network namespace
+        elements: str
+        required: true
+        type: list
+      hooks_up:
+        description: Commands to execute to set up the Wireguard interface inside the network namespace
+        elements: str
+        required: true
+        type: list
+      transmission_version:
+        description: Version of Transmission server to install
+        default: latest
+        required: false
+        type: str

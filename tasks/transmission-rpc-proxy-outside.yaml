@@ -1,0 +1,29 @@
+---
+
+-
+  name: Install lighttpd
+  ansible.builtin.apt:
+    state: present
+    name: lighttpd
+  when:
+    - ansible_facts['os_family'] | lower == 'debian'
+
+-
+  name: Create systemd unit for Transmission RPC outer proxy service
+  ansible.builtin.copy:
+    state: file
+    dest: /etc/systemd/system/transmission-rpc-proxy-outside.service
+    group: root
+    mode: u=rwx,go=rx
+    owner: root
+    src: systemd/rpc-proxy-outside.service
+
+-
+  name: Create systemd unit for Transmission RPC outer proxy socket
+  ansible.builtin.copy:
+    state: file
+    dest: /etc/systemd/system/transmission-rpc-proxy-outside.socket
+    group: root
+    mode: u=rwx,go=rx
+    owner: root
+    src: systemd/rpc-proxy-outside.socket

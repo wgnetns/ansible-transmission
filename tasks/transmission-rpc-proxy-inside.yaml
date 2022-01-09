@@ -1,0 +1,28 @@
+---
+
+# systemd-socket-proxyd(8) was introduced in systemd version 209
+-
+  name: Ensure systemd-socket-proxyd(8) is present
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.packages['systemd'][0].version is version('209','>=')
+    fail_msg: systemd is too old
+
+-
+  name: Create systemd unit for Transmission RPC inner proxy service
+  ansible.builtin.file:
+    state: file
+    group: root
+    mode: u=rwx,go=rx
+    owner: root
+    path: /etc/systemd/system/transmission-rpc-proxy-inside.service
+
+-
+  name: Create systemd unit for Transmission RPC inner proxy socket
+  ansible.builtin.copy:
+    state: file
+    dest: /etc/systemd/system/transmission-rpc-proxy-inside.socket
+    group: root
+    mode: u=rwx,go=rx
+    owner: root
+    src: systemd/rpc-proxy-inside.socket

@@ -1,0 +1,10 @@
+[Unit]
+Description=Transmission RPC inner proxy
+
+[Socket]
+ListenStream=%t/transmission-rpc.socket
+SocketGroup={{ transmission.rpc.socket.group }}
+SocketMode=0060
+
+[Install]
+WantedBy=sockets.target

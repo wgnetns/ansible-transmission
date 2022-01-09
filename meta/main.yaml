@@ -1,0 +1,18 @@
+---
+
+galaxy_info:
+  role_name: transmission_wgnetns
+  author: David Joaquín Shourabi Porcel
+  description: Headless Transmission BitTorrent server isolated in a Wireguard-ed network namespace of its own
+  galaxy_tags:
+    - bittorrent
+    - torrent
+    - wireguard
+  min_ansible_version: 2.12
+  platforms:
+    -
+      name: Ubuntu
+      versions:
+        - focal # 20.04
+        #- hirsute # 21.04
+        #- impish # 21.10

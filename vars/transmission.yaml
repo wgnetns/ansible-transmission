@@ -1,0 +1,17 @@
+---
+
+network_namespace_name: transmission
+
+transmission:
+  rpc:
+    socket:
+      group: http
+  systemd_unit_name:
+    Ubuntu:
+      20.04: transmission-daemon
+  settings:
+    # Transmission's default; hardcoded here to avoid hardcoding it in more than one place
+    rpc-port: 9091
+  user:
+    Ubuntu:
+      20.04: debian-transmission

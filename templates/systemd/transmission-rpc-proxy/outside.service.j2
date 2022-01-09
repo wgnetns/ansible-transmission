@@ -1,0 +1,22 @@
+[Unit]
+After=network.target
+After=syslog.target
+After=transmission-rpc-proxy-inside.socket
+Description=Transmission RPC outer proxy
+Requires=transmission-rpc-proxy-inside.socket
+# Let lighttpd start even if Transmission is not running, so that it may at least warn (503)
+#Requisite={{ transmission.systemd_unit_name }}.service
+
+[Service]
+DynamicUser=yes
+Environment="SOCKET_PATH=%t/transmission-rpc.socket"
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/bin/lighttpd -D -f /etc/lighttpd/transmission.conf -i 10
+KillSignal=SIGINT
+NoNewPrivileges=yes
+PrivateNetwork=yes
+PrivateTmp=yes
+PrivateUsers=yes
+ProtectHome=yes
+ProtectSystem=strict
+SupplementaryGroups={{ transmission.rpc.socket.group }}

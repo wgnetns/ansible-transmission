@@ -1,0 +1,17 @@
+---
+
+-
+  name: Install Transmission
+  ansible.builtin.apt:
+    state: latest
+    name: transmission-daemon
+  when:
+    - ansible_facts['os_family'] | lower == 'debian'
+-
+  # FIXME: turn into handler / notify
+  name: Ensure Transmission is not running
+  ansible.builtin.systemd:
+    state: stopped
+    name: {{ transmission.systemd_unit_name[ansible_facts['os_family']] }}.service
+
+# FIXME: configuration

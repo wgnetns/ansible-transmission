@@ -1,0 +1,27 @@
+---
+
+-
+  name: Set up Wireguard-ed network namespace
+  ansible.builtin.include_role:
+    name: wgnetns
+    vars:
+      binds:
+        -
+          - /var/run/netns/transmission/resolv.conf
+          - /etc/resolv.conf
+      network_namespace_name: transmission
+      services:
+        - {{ transmission.systemd_unit_name[ansible_facts['os_family']] }}
+        - transmission-rpc-proxy-inside
+      wireguard_setup:
+        # The Transmission RPC inner proxy needs the loopback device
+        # to reach the Transmission server
+        loopback: true
+        # Ideally, some outbound traffic would be restricted,
+        # to mitigate the damage in case someone breaks into the server
+        route_outbound_ipv4: true
+        route_outbound_ipv6: true
+        hooks:
+          after: {{ hooks_postup }}
+          down: {{ hooks_down }}
+          setup: {{ hooks_up }}

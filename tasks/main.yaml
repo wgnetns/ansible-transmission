@@ -1,0 +1,53 @@
+---
+
+-
+  name: Update APT lists
+  ansible.builtin.apt:
+    update_cache: yes
+  when:
+    - ansible_facts['os_family'] | lower == 'debian'
+
+-
+  name: Set up Transmission server
+  ansible.builtin.import_tasks: transmission
+
+-
+  name: Set up Wireguard-ed network namespace
+  ansible.builtin.import_tasks: netns
+
+-
+  name: Set up Transmission RPC inner proxy
+  ansible.builtin.import_tasks: transmission-rpc-proxy-inside.yaml
+
+-
+  name: Set up Transmission RPC outer proxy
+  ansible.builtin.import_tasks: transmission-rpc-proxy-outside.yaml
+
+-
+  name: Reload systemd configuration
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+-
+  name: Enable Transmission server
+  ansible.builtin.systemd:
+    state: started
+    daemon_reload: no
+    enabled: yes
+    name: {{ transmission.systemd_unit_name[ansible_facts['os_family']] }}.service
+
+-
+  name: Enable Transmission RPC inner proxy
+  ansible.builtin.systemd:
+    state: started
+    daemon_reload: no
+    enabled: yes
+    name: transmission-rpc-proxy-inside.socket
+
+-
+  name: Enable Transmission RPC outer proxy
+  ansible.builtin.systemd:
+    state: started
+    daemon_reload: no
+    enabled: yes
+    name: transmission-rpc-proxy-outside.socket
